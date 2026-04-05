@@ -3,7 +3,8 @@ from datetime import datetime
 
 from sqlalchemy import String, DateTime, func
 from sqlalchemy.dialects.postgresql import UUID
-from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from typing import List
 
 from app.core.database import Base
 
@@ -32,4 +33,10 @@ class User(Base):
         DateTime(timezone=True),
         nullable=False,
         server_default=func.now(),
+    )
+
+    tasks: Mapped[List["Task"]] = relationship(
+        "Task",
+        back_populates="user",
+        cascade="all, delete-orphan",
     )
